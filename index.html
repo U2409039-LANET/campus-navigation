@@ -1,140 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Campus Map</title>
-    <style>
-        :root {
-            --primary: #2c3e50;
-            --accent: #3498db;
-            --path: #e74c3c;
-            --bg: #f4f7f6;
-        }
+<title>Campus Navigation</title>
 
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; flex-direction: column; align-items: center; margin: 0; padding: 20px; }
-        h2 { color: var(--primary); margin-bottom: 10px; }
+<style>
 
-        /* Map Container */
-        #map-container {
-            position: relative;
-            width: 600px;
-            height: 400px;
-            background: #fff;
-            border: 3px solid var(--primary);
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
+body{
+text-align:center;
+font-family:Arial;
+}
 
-        /* Building Styling */
-        .building {
-            position: absolute;
-            padding: 8px;
-            background: #ecf0f1;
-            border: 2px solid #bdc3c7;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-            text-align: center;
-            transition: all 0.3s;
-        }
+#map{
+position:relative;
+display:inline-block;
+}
 
-        .main-gate { background: #27ae60; color: white; bottom: 10px; left: 50%; transform: translateX(-50%); }
+#user{
+position:absolute;
+width:30px;
+top:300px;
+left:50px;
+}
 
-        /* Path Line */
-        #path-svg {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-        }
+button{
+margin:5px;
+padding:10px;
+}
 
-        #route {
-            fill: none;
-            stroke: var(--path);
-            stroke-width: 4;
-            stroke-dasharray: 10;
-            stroke-linejoin: round;
-            stroke-linecap: round;
-            display: none;
-        }
+</style>
 
-        /* Navigation Controls */
-        .controls { margin-top: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 600px; }
-        
-        button {
-            padding: 10px;
-            cursor: pointer;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-weight: 600;
-        }
-
-        button:hover { background: #2980b9; }
-
-        #direction-text { margin-top: 15px; font-style: italic; color: #555; }
-    </style>
 </head>
+
 <body>
 
-    <h2>📍 Campus Wayfinder</h2>
+<h1>Campus Navigation</h1>
 
-    <div id="map-container">
-        <svg id="path-svg">
-            <path id="route" d="" />
-        </svg>
+<h3>Move to Navigate</h3>
 
-        <div class="building main-gate" id="gate">MAIN GATE</div>
-        <div class="building" style="top: 20px; left: 40px;" id="lib">Library</div>
-        <div class="building" style="top: 50px; left: 240px;" id="main">Main Block</div>
-        <div class="building" style="top: 150px; left: 450px;" id="gallery">Gallery Hall</div>
-        <div class="building" style="top: 280px; left: 400px;" id="multi">Multimedia Hall 2</div>
-        <div class="building" style="top: 250px; left: 50px;" id="auditorium">Auditorium</div>
-        <div class="building" style="top: 130px; left: 230px;" id="office">Principal Office</div>
-        <div class="building" style="top: 20px; left: 450px;" id="sunya">Sunya Lab</div>
-    </div>
+<div id="map">
 
-    <div class="controls">
-        <button onclick="navigate('lib')">Library</button>
-        <button onclick="navigate('main')">Main Block</button>
-        <button onclick="navigate('gallery')">Gallery Hall</button>
-        <button onclick="navigate('multi')">Multimedia Hall 2</button>
-        <button onclick="navigate('auditorium')">Auditorium</button>
-        <button onclick="navigate('office')">Principal Office</button>
-        <button onclick="navigate('sunya')">Sunya Lab</button>
-    </div>
+<img src="map.png" width="600">
 
-    <p id="direction-text">Select a destination to see the path from the Main Gate.</p>
+<img id="user"
+src="https://cdn-icons-png.flaticon.com/512/64/64113.png">
 
-    <script>
-        function navigate(targetId) {
-            const gate = document.getElementById('gate').getBoundingClientRect();
-            const target = document.getElementById(targetId).getBoundingClientRect();
-            const container = document.getElementById('map-container').getBoundingClientRect();
+</div>
 
-            const route = document.getElementById('route');
-            const text = document.getElementById('direction-text');
+<br><br>
 
-            // Calculate relative positions
-            const startX = 300; // Center Bottom (Main Gate)
-            const startY = 380;
-            
-            const endX = (target.left - container.left) + (target.width / 2);
-            const endY = (target.top - container.top) + (target.height / 2);
+<button onclick="up()">Up</button>
+<button onclick="down()">Down</button>
+<button onclick="left()">Left</button>
+<button onclick="right()">Right</button>
 
-            // Create a simple "L" shaped path for a "street" feel
-            const pathData = `M ${startX} ${startY} L ${startX} ${endY} L ${endX} ${endY}`;
-            
-            route.setAttribute('d', pathData);
-            route.style.display = 'block';
+<script>
 
-            // Dynamic Directions
-            const buildingName = document.getElementById(targetId).innerText;
-            text.innerHTML = `<b>Route:</b> Walk straight from the Main Gate and turn toward the <b>${buildingName}</b>.`;
-        }
-    </script>
+let user=document.getElementById("user");
+
+let x=50;
+let y=300;
+
+function up(){
+y-=10;
+user.style.top=y+"px";
+}
+
+function down(){
+y+=10;
+user.style.top=y+"px";
+}
+
+function left(){
+x-=10;
+user.style.left=x+"px";
+}
+
+function right(){
+x+=10;
+user.style.left=x+"px";
+}
+
+</script>
+
 </body>
 </html>
